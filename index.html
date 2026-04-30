@@ -1,96 +1,219 @@
-﻿<!DOCTYPE html>
-
-<!--
-     HTML code used with Epic Games HTML5 projects
-
-     much of this is for UE4 development purposes.
-
-     to create a custom HTML file for your project:
-     - make a copy of this file - or make one from scratch
-     - and put it in: "your project folder"/Build/HTML/GameX.html.template
--->
-
-<html lang="en">
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
-	<title>H5</title>
+	<title>My Project - 游戏</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<!-- <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script> -->
-	<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script> -->
-	<!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet"> -->
+	<meta name="description" content="基于 Unreal Engine 的 HTML5 游戏">
 
 	<script src="jquery-2.1.3.min.js"></script>
 	<script src="bootstrap.min.js"></script>
 	<link href="bootstrap.min.css" rel="stylesheet">
-
-	<!-- https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/fonts/glyphicons-halflings-regular.woff2 -->
-	<!-- https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/fonts/glyphicons-halflings-regular.woff -->
-	<!-- https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/fonts/glyphicons-halflings-regular.ttf -->
-
 	<link href="H5.css" rel="stylesheet">
+
+	<style>
+		/* 优化样式 */
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+			min-height: 100vh;
+			overflow: hidden;
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		}
+
+		/* 加载屏幕 */
+		#loading-screen {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+			z-index: 9999;
+			transition: opacity 0.5s ease;
+		}
+
+		#loading-screen.hidden {
+			opacity: 0;
+			pointer-events: none;
+		}
+
+		.loading-spinner {
+			width: 60px;
+			height: 60px;
+			border: 4px solid rgba(255, 255, 255, 0.1);
+			border-top-color: #e94560;
+			border-radius: 50%;
+			animation: spin 1s linear infinite;
+		}
+
+		@keyframes spin {
+			to { transform: rotate(360deg); }
+		}
+
+		.loading-text {
+			color: #fff;
+			font-size: 1.5rem;
+			margin-top: 20px;
+			font-weight: 300;
+			letter-spacing: 2px;
+		}
+
+		.loading-progress {
+			width: 200px;
+			height: 4px;
+			background: rgba(255, 255, 255, 0.1);
+			border-radius: 2px;
+			margin-top: 30px;
+			overflow: hidden;
+		}
+
+		.loading-progress-bar {
+			height: 100%;
+			background: linear-gradient(90deg, #e94560, #0f3460);
+			width: 0%;
+			transition: width 0.3s ease;
+		}
+
+		.game-title {
+			position: fixed;
+			top: 20px;
+			left: 50%;
+			transform: translateX(-50%);
+			color: rgba(255, 255, 255, 0.8);
+			font-size: 1.2rem;
+			font-weight: 300;
+			letter-spacing: 4px;
+			text-transform: uppercase;
+			z-index: 100;
+			text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+		}
+
+		/* 控制按钮优化 */
+		#buttonarea {
+			position: fixed;
+			bottom: 20px;
+			left: 50%;
+			transform: translateX(-50%);
+			z-index: 100;
+		}
+
+		.btn-primary {
+			background: rgba(233, 69, 96, 0.9);
+			border: none;
+			padding: 10px 25px;
+			border-radius: 25px;
+			transition: all 0.3s ease;
+			backdrop-filter: blur(10px);
+		}
+
+		.btn-primary:hover {
+			background: #e94560;
+			transform: scale(1.05);
+			box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
+		}
+
+		/* 画布优化 */
+		#canvas {
+			display: block;
+			margin: 0 auto;
+			outline: none;
+			box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+		}
+
+		/* 编译消息优化 */
+		#compilingmessage {
+			background: rgba(0, 0, 0, 0.8);
+			backdrop-filter: blur(10px);
+			border: 1px solid rgba(255, 255, 255, 0.1);
+			color: #fff;
+			border-radius: 10px;
+		}
+	</style>
 </head>
 <body>
 
-<div class="wrapper" id="mainarea">
-	<div class="alert alert-warning centered-axis-xy" style="min-height: 20px; display:none;" role="alert" id="compilingmessage">
-		<div id='loadTasks'> </div>
-	</div>
-	<!-- The "tabindex=0" specifier on the canvas is important to allow it to capture keyboard focus when clicking on it with a mouse -->
-	<canvas tabindex=0 id="canvas" class="emscripten" oncontextmenu="event.preventDefault()" style="display:none;">
-</div>
-<div class="buttonarea text-center" id="buttonarea">
-	<!--
-	<button type="button" class="btn btn-primary" id="about" data-toggle="modal" data-target="#aboutModal" title="About">
-		<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-		<span class="buttontext">&nbsp;About</span>
-	</button>
-	-->
-	
-	<button type="button" id="pause" class="btn btn-primary" onclick="try { Module['pauseMainLoop'](); $('#resume').show().focus(); $('#pause').hide(); } catch(e) {console.error(e);}" title="Pause" style="display:none">
-		<span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
-		<span class="buttontext">&nbsp;Pause</span> 
-	</button>
-	<button type="button" id="resume" class="btn btn-primary" onclick="try { Module['resumeMainLoop'](); $('#pause').show().focus(); $('#resume').hide(); } catch(e) {console.error(e);}" title="Resume" style="display:none">
-		<span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-		<span class="buttontext">&nbsp;Resume</span>
-	</button>
-	
-	<!--<button type="button" class="btn btn-primary" onclick="var w = document.getElementById('logwindow'); w.style.display = w.style.display ? '' : 'none';">Toggle Log</button></div>-->
-	<!--
-	<button type="button" class="btn btn-primary" id="clear_indexeddb" onclick="try { deleteIndexedDBStorage(); } catch(e) {console.error(e);}" title="Clear IndexedDB" style="display:none">
-		<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
-		<span class="buttontext">&nbsp;Clear IndexedDB</span>
-	</button>
-	-->
-	
-	<button type="button" class="btn btn-primary" id="fullscreen_request" title="Fullscreen" style="display:none">
-		<span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-		<span class="buttontext">&nbsp;Fullscreen</span>
-	</button>
-	
-</div>
-
-<!--
-<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-			<div class="modal-body">
-				<div></div>
-				<div class="text-center">
-					<button type="button" class="btn btn-default" data-dismiss="modal" style="margin-bottom:0">
-						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-						<span class="buttontext">&nbsp;Close</span>
-					</button>
-				</div>
-			</div>
+	<!-- 加载屏幕 -->
+	<div id="loading-screen">
+		<div class="loading-spinner"></div>
+		<div class="loading-text">正在加载游戏...</div>
+		<div class="loading-progress">
+			<div class="loading-progress-bar" id="progress-bar"></div>
 		</div>
 	</div>
-</div>
--->
 
-<div class="texthalf text-normal jumbotron " id="logwindow" style='display:none'></div>
+	<!-- 游戏标题 -->
+	<div class="game-title">My Project</div>
 
-<script src="H5.UE4.js"></script>
+	<div class="wrapper" id="mainarea">
+		<div class="alert alert-warning centered-axis-xy" style="min-height: 20px; display:none;" role="alert" id="compilingmessage">
+			<div id='loadTasks'> </div>
+		</div>
+		<canvas tabindex=0 id="canvas" class="emscripten" oncontextmenu="event.preventDefault()" style="display:none;">
+	</div>
+
+	<div class="buttonarea text-center" id="buttonarea">
+		<button type="button" id="pause" class="btn btn-primary" onclick="try { Module['pauseMainLoop'](); $('#resume').show().focus(); $('#pause').hide(); } catch(e) {console.error(e);}" title="Pause" style="display:none">
+			<span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+			<span class="buttontext">&nbsp;Pause</span> 
+		</button>
+		<button type="button" id="resume" class="btn btn-primary" onclick="try { Module['resumeMainLoop'](); $('#pause').show().focus(); $('#resume').hide(); } catch(e) {console.error(e);}" title="Resume" style="display:none">
+			<span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+			<span class="buttontext">&nbsp;Resume</span>
+		</button>
+		<button type="button" class="btn btn-primary" id="fullscreen_request" title="Fullscreen" style="display:none">
+			<span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+			<span class="buttontext">&nbsp;Fullscreen</span>
+		</button>
+	</div>
+
+	<div class="texthalf text-normal jumbotron " id="logwindow" style='display:none'></div>
+
+	<script>
+		// 模拟加载进度
+		let progress = 0;
+		const progressBar = document.getElementById('progress-bar');
+		const loadingScreen = document.getElementById('loading-screen');
+
+		function updateProgress() {
+			if (progress < 90) {
+				progress += Math.random() * 10;
+				progressBar.style.width = progress + '%';
+				setTimeout(updateProgress, 300);
+			}
+		}
+		updateProgress();
+
+		// 监听游戏加载完成
+		window.addEventListener('load', function() {
+			// 检查画布何时显示
+			const canvasObserver = new MutationObserver(function(mutations) {
+				const canvas = document.getElementById('canvas');
+				if (canvas && canvas.style.display !== 'none') {
+					progressBar.style.width = '100%';
+					setTimeout(() => {
+						loadingScreen.classList.add('hidden');
+					}, 500);
+					canvasObserver.disconnect();
+				}
+			});
+
+			const mainarea = document.getElementById('mainarea');
+			if (mainarea) {
+				canvasObserver.observe(mainarea, { childList: true, subtree: true, attributes: true });
+			}
+		});
+	</script>
+
+	<script src="H5.UE4.js"></script>
 </body>
 </html>
