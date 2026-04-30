@@ -193,30 +193,41 @@
 	<div class="texthalf text-normal jumbotron " id="logwindow" style='display:none'></div>
 
 	<script>
-		// 模拟加载进度
-		let progress = 0;
+		// 真实加载进度
 		const progressBar = document.getElementById('progress-bar');
 		const loadingScreen = document.getElementById('loading-screen');
+		const loadingText = document.querySelector('.loading-text');
 
-		function updateProgress() {
-			if (progress < 90) {
-				progress += Math.random() * 10;
-				progressBar.style.width = progress + '%';
-				setTimeout(updateProgress, 300);
+		// 监听资源加载
+		function setupLoadMonitoring() {
+			if (!window.Module) {
+				window.Module = {};
 			}
-		}
-		updateProgress();
 
-		// 监听游戏加载完成
-		window.addEventListener('load', function() {
-			// 检查画布何时显示
+			// 保存原始的monitorRunDependencies
+			let originalMonitor = window.Module.monitorRunDependencies;
+
+			window.Module.monitorRunDependencies = function(left, total) {
+				if (originalMonitor) {
+					originalMonitor(left, total);
+				}
+
+				if (total > 0) {
+					let percent = ((total - left) / total) * 100;
+					progressBar.style.width = percent + '%';
+					loadingText.textContent = '正在加载资源... ' + Math.round(percent) + '%';
+				}
+			};
+
+			// 监听画布显示
 			const canvasObserver = new MutationObserver(function(mutations) {
 				const canvas = document.getElementById('canvas');
 				if (canvas && canvas.style.display !== 'none') {
 					progressBar.style.width = '100%';
+					loadingText.textContent = '准备就绪！';
 					setTimeout(() => {
 						loadingScreen.classList.add('hidden');
-					}, 500);
+					}, 800);
 					canvasObserver.disconnect();
 				}
 			});
@@ -225,7 +236,10 @@
 			if (mainarea) {
 				canvasObserver.observe(mainarea, { childList: true, subtree: true, attributes: true });
 			}
-		});
+		}
+
+		// 立即设置监听
+		setupLoadMonitoring();
 	</script>
 
 	<script src="H5.UE4.js"></script>
