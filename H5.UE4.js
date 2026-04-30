@@ -1,4 +1,4 @@
-﻿// javascript code used with Epic Games HTML5 projects
+// javascript code used with Epic Games HTML5 projects
 //
 // much of this is for UE4 development purposes.
 //
@@ -312,7 +312,7 @@ function detectWebGL() {
 // Canvas scaling mode should be set to one of: 1=STRETCH, 2=ASPECT, or 3=FIXED.
 // This dictates how the canvas size changes when the browser window is resized
 // by dragging from the corner.
-var canvasWindowedScaleMode = 2 /*ASPECT*/;
+var canvasWindowedScaleMode = 1 /*STRETCH*/;
 
 // High DPI setting configures whether to match the canvas size 1:1 with
 // the physical pixels on the screen.

@@ -122,12 +122,26 @@
 			box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
 		}
 
-		/* 画布优化 */
+		/* 画布优化 - 全屏 */
 		#canvas {
 			display: block;
-			margin: 0 auto;
+			width: 100vw !important;
+			height: 100vh !important;
 			outline: none;
-			box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+			position: fixed;
+			top: 0;
+			left: 0;
+			z-index: 50;
+		}
+
+		.wrapper {
+			position: fixed !important;
+			top: 0;
+			left: 0;
+			width: 100vw !important;
+			height: 100vh !important;
+			margin: 0 !important;
+			padding: 0 !important;
 		}
 
 		/* 编译消息优化 */
