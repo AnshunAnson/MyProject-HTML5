@@ -161,7 +161,7 @@
 		<canvas tabindex=0 id="canvas" class="emscripten" oncontextmenu="event.preventDefault()" style="display:none;">
 	</div>
 
-	<div class="buttonarea text-center" id="buttonarea">
+	<div class="buttonarea text-center" id="buttonarea" style="display:none">
 		<button type="button" id="pause" class="btn btn-primary" onclick="try { Module['pauseMainLoop'](); $('#resume').show().focus(); $('#pause').hide(); } catch(e) {console.error(e);}" title="Pause" style="display:none">
 			<span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
 			<span class="buttontext">&nbsp;Pause</span> 
