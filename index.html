@@ -13,43 +13,31 @@
 </head>
 <body>
 
-	<!-- 加载屏幕 -->
-	<div id="loading-screen">
-		<div class="loading-spinner"></div>
-		<div class="loading-text">正在加载游戏...</div>
-		<div class="loading-progress">
-			<div class="loading-progress-bar" id="progress-bar"></div>
-		</div>
+<div class="wrapper" id="mainarea">
+	<div class="alert alert-warning centered-axis-xy" style="min-height: 20px; display:none;" role="alert" id="compilingmessage">
+		<div id='loadTasks'> </div>
 	</div>
+	<canvas tabindex=0 id="canvas" class="emscripten" oncontextmenu="event.preventDefault()" style="display:none;">
+</div>
 
-	<!-- 游戏标题 -->
-	<div class="game-title">Yardstick</div>
+<div class="buttonarea text-center" id="buttonarea">
+	<button type="button" id="pause" class="btn btn-primary" onclick="try { Module['pauseMainLoop'](); $('#resume').show().focus(); $('#pause').hide(); } catch(e) {console.error(e);}" title="Pause" style="display:none">
+		<span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+		<span class="buttontext">&nbsp;Pause</span>
+	</button>
+	<button type="button" id="resume" class="btn btn-primary" onclick="try { Module['resumeMainLoop'](); $('#pause').show().focus(); $('#resume').hide(); } catch(e) {console.error(e);}" title="Resume" style="display:none">
+		<span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+		<span class="buttontext">&nbsp;Resume</span>
+	</button>
 
-	<div class="wrapper" id="mainarea">
-		<div class="alert alert-warning centered-axis-xy" style="min-height: 20px; display:none;" role="alert" id="compilingmessage">
-			<div id='loadTasks'> </div>
-		</div>
-		<canvas tabindex=0 id="canvas" class="emscripten" oncontextmenu="event.preventDefault()" style="display:none;">
-	</div>
+	<button type="button" class="btn btn-primary" id="fullscreen_request" title="Fullscreen" style="display:none">
+		<span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+		<span class="buttontext">&nbsp;Fullscreen</span>
+	</button>
+</div>
 
-	<div class="buttonarea text-center" id="buttonarea" style="display:none">
-		<button type="button" id="pause" class="btn btn-primary" onclick="try { Module['pauseMainLoop'](); $('#resume').show().focus(); $('#pause').hide(); } catch(e) {console.error(e);}" title="Pause" style="display:none">
-			<span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
-			<span class="buttontext">&nbsp;Pause</span> 
-		</button>
-		<button type="button" id="resume" class="btn btn-primary" onclick="try { Module['resumeMainLoop'](); $('#pause').show().focus(); $('#resume').hide(); } catch(e) {console.error(e);}" title="Resume" style="display:none">
-			<span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-			<span class="buttontext">&nbsp;Resume</span>
-		</button>
-		<button type="button" class="btn btn-primary" id="fullscreen_request" title="Fullscreen" style="display:none">
-			<span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-			<span class="buttontext">&nbsp;Fullscreen</span>
-		</button>
-	</div>
+<div class="texthalf text-normal jumbotron " id="logwindow" style='display:none'></div>
 
-	<div class="texthalf text-normal jumbotron " id="logwindow" style='display:none'></div>
-
-	<script src="js/game.js"></script>
-	<script src="Yardstick.UE4.js"></script>
+<script src="Yardstick.UE4.js"></script>
 </body>
 </html>
