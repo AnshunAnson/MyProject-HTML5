@@ -1,0 +1,26 @@
+# Unreal Engine files
+*.uasset
+*.umap
+*.pdb
+*.exp
+*.lib
+*.dll
+*.exe
+
+# Build artifacts
+Build/
+Intermediate/
+Saved/
+DerivedDataCache/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
