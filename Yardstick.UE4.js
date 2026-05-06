@@ -125,14 +125,9 @@ var mobile = iPhone || iPad || android;
 
 console.log("mobile: " + mobile);
 
-var dataVariant = '';
+var dataVariant = '.astc';
 
-if (true) {
-	if (mobile) {
-		dataVariant = '.astc';
-	}
-	console.log("dataVariant: " + dataVariant);
-}
+console.log("dataVariant: " + dataVariant);
 
 var UE4 = {
 	on_fatal: function() {
