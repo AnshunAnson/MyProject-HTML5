@@ -1,43 +1,76 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-	<title>Yardstick - 游戏</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="基于 Unreal Engine 的 HTML5 游戏">
+&lt;!DOCTYPE html&gt;
+&lt;html lang="zh-CN"&gt;
+&lt;head&gt;
+	&lt;title&gt;Yardstick - 游戏&lt;/title&gt;
+	&lt;meta charset="utf-8"&gt;
+	&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+	&lt;meta name="description" content="基于 Unreal Engine 的 HTML5 游戏"&gt;
 
-	<script src="jquery-2.1.3.min.js"></script>
-	<script src="bootstrap.min.js"></script>
-	<link href="bootstrap.min.css" rel="stylesheet">
-	<link href="Yardstick.css" rel="stylesheet">
-</head>
-<body>
+	&lt;script src="jquery-2.1.3.min.js"&gt;&lt;/script&gt;
+	&lt;script src="bootstrap.min.js"&gt;&lt;/script&gt;
+	&lt;link href="bootstrap.min.css" rel="stylesheet"&gt;
+	&lt;link href="Yardstick.css" rel="stylesheet"&gt;
+&lt;/head&gt;
+&lt;body&gt;
 
-<div class="wrapper" id="mainarea">
-	<div class="alert alert-warning centered-axis-xy" style="min-height: 20px; display:none;" role="alert" id="compilingmessage">
-		<div id='loadTasks'> </div>
-	</div>
-	<canvas tabindex=0 id="canvas" class="emscripten" oncontextmenu="event.preventDefault()" style="display:none;">
-</div>
+&lt;div class="wrapper" id="mainarea"&gt;
+	&lt;div class="alert alert-warning centered-axis-xy" style="min-height: 20px; display:none;" role="alert" id="compilingmessage"&gt;
+		&lt;div id='loadTasks'&gt; &lt;/div&gt;
+	&lt;/div&gt;
+	&lt;canvas tabindex=0 id="canvas" class="emscripten" oncontextmenu="event.preventDefault()" style="display:none;"&gt;
+&lt;/div&gt;
 
-<div class="buttonarea text-center" id="buttonarea">
-	<button type="button" id="pause" class="btn btn-primary" onclick="try { Module['pauseMainLoop'](); $('#resume').show().focus(); $('#pause').hide(); } catch(e) {console.error(e);}" title="Pause" style="display:none">
-		<span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
-		<span class="buttontext">&nbsp;Pause</span>
-	</button>
-	<button type="button" id="resume" class="btn btn-primary" onclick="try { Module['resumeMainLoop'](); $('#pause').show().focus(); $('#resume').hide(); } catch(e) {console.error(e);}" title="Resume" style="display:none">
-		<span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-		<span class="buttontext">&nbsp;Resume</span>
-	</button>
+&lt;div class="buttonarea text-center" id="buttonarea"&gt;
+	&lt;button type="button" id="pause" class="btn btn-primary" onclick="try { Module['pauseMainLoop'](); $('#resume').show().focus(); $('#pause').hide(); } catch(e) {console.error(e);}" title="Pause" style="display:none"&gt;
+		&lt;span class="glyphicon glyphicon-pause" aria-hidden="true"&gt;&lt;/span&gt;
+		&lt;span class="buttontext"&gt;&amp;nbsp;Pause&lt;/span&gt;
+	&lt;/button&gt;
+	&lt;button type="button" id="resume" class="btn btn-primary" onclick="try { Module['resumeMainLoop'](); $('#pause').show().focus(); $('#resume').hide(); } catch(e) {console.error(e);}" title="Resume" style="display:none"&gt;
+		&lt;span class="glyphicon glyphicon-play" aria-hidden="true"&gt;&lt;/span&gt;
+		&lt;span class="buttontext"&gt;&amp;nbsp;Resume&lt;/span&gt;
+	&lt;/button&gt;
 
-	<button type="button" class="btn btn-primary" id="fullscreen_request" title="Fullscreen" style="display:none">
-		<span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-		<span class="buttontext">&nbsp;Fullscreen</span>
-	</button>
-</div>
+	&lt;button type="button" class="btn btn-primary" id="fullscreen_request" title="Fullscreen" style="display:none"&gt;
+		&lt;span class="glyphicon glyphicon-fullscreen" aria-hidden="true"&gt;&lt;/span&gt;
+		&lt;span class="buttontext"&gt;&amp;nbsp;Fullscreen&lt;/span&gt;
+	&lt;/button&gt;
+&lt;/div&gt;
 
-<div class="texthalf text-normal jumbotron " id="logwindow" style='display:none'></div>
+&lt;div class="texthalf text-normal jumbotron " id="logwindow" style='display:none'&gt;&lt;/div&gt;
 
-<script src="Yardstick.UE4.js"></script>
-</body>
-</html>
+&lt;script&gt;
+window.addEventListener('load', function() {
+	function addTouchSupport() {
+		var canvas = document.getElementById('canvas');
+		if (!canvas) return;
+
+		canvas.addEventListener('touchstart', function(e) {
+			e.preventDefault();
+			canvas.focus();
+		}, { passive: false });
+
+		canvas.addEventListener('touchmove', function(e) {
+			e.preventDefault();
+		}, { passive: false });
+
+		canvas.addEventListener('touchend', function(e) {
+			e.preventDefault();
+		}, { passive: false });
+
+		canvas.addEventListener('touchcancel', function(e) {
+			e.preventDefault();
+		}, { passive: false });
+
+		console.log('Touch support added');
+	}
+
+	if (typeof Module !== 'undefined' &amp;&amp; Module.postRun) {
+		Module.postRun.push(addTouchSupport);
+	} else {
+		setTimeout(addTouchSupport, 1000);
+	}
+});
+&lt;/script&gt;
+&lt;script src="Yardstick.UE4.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
