@@ -111,17 +111,40 @@ if ('') {
 
 var userAgent = navigator.userAgent || '';
 console.log("userAgent: " + userAgent);
+console.log("platform: " + (navigator.platform || 'unknown'));
+console.log("maxTouchPoints: " + (navigator.maxTouchPoints || 0));
+console.log("ontouchstart: " + ('ontouchstart' in window));
 
-// TODO: customizable regex for mobile useragent?
+// 改进的设备检测
 var iPhone = userAgent.indexOf('iPhone') != -1;
 var iPad = userAgent.indexOf('iPad') != -1;
 var android = userAgent.indexOf('Android') != -1;
 
-console.log("iPhone: " + iPhone);
-console.log("iPad: " + iPad);
-console.log("android: " + android);
+// 检测现代 iPad（可能报告为桌面模式）
+var isIPad = (function() {
+	if (iPad) return true;
+	// 检查是否是 Mac 但有触摸能力（现代 iPad）
+	if (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 0) {
+		return true;
+	}
+	return false;
+})();
 
-var mobile = iPhone || iPad || android;
+// 检测触摸屏设备
+var hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+// 检测小屏幕设备
+var isSmallScreen = window.innerWidth <= 1024 || window.innerHeight <= 1024;
+
+console.log("iPhone: " + iPhone);
+console.log("iPad (old): " + iPad);
+console.log("isIPad (new detection): " + isIPad);
+console.log("android: " + android);
+console.log("hasTouch: " + hasTouch);
+console.log("isSmallScreen: " + isSmallScreen);
+
+// 综合判断移动端
+var mobile = iPhone || isIPad || android || (hasTouch && isSmallScreen);
 
 console.log("mobile: " + mobile);
 
@@ -130,6 +153,9 @@ var dataVariant = '';
 if (true) {
 	if (mobile) {
 		dataVariant = '.astc';
+		console.log("✅ 检测到移动设备，使用 ASTC 纹理: Yardstick" + dataVariant + ".data");
+	} else {
+		console.log("🖥️ 检测到桌面设备，使用默认纹理: Yardstick.data");
 	}
 	console.log("dataVariant: " + dataVariant);
 }
